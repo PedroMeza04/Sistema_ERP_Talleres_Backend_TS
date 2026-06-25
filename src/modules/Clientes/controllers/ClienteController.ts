@@ -4,7 +4,12 @@ import { ClienteService } from '../services/Cliente.service';
 export class ClienteController {
   static crear = async (req: Request, res: Response) => {
     try {
-      const cliente = await ClienteService.crear(req.body);
+      const id_empresa = (req.headers['x-company-id'] as string) ?? req.body.id_empresa;
+      if (!id_empresa) {
+        res.status(400).json({ mensaje: 'id_empresa requerido (header X-Company-Id)' });
+        return;
+      }
+      const cliente = await ClienteService.crear({ ...req.body, id_empresa });
       res.status(201).json({ mensaje: 'Cliente creado exitosamente', cliente });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });
@@ -13,7 +18,8 @@ export class ClienteController {
 
   static getAll = async (req: Request, res: Response) => {
     try {
-      const clientes = await ClienteService.getAll(req.params.id_empresa);
+      const id_empresa = req.params.id_empresa ?? (req.headers['x-company-id'] as string);
+      const clientes = await ClienteService.getAll(id_empresa);
       res.status(200).json({ clientes });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });
