@@ -2,6 +2,8 @@ import type { Response } from 'express';
 import { VehiculoService } from '../services/Vehiculo.service';
 import type { TenantRequest } from '../../../middleware/tenant';
 
+// Igual que en ClienteController: ahora todo pasa por req.empresaId (ya validado por
+// el middleware de tenant) en vez de confiar en headers o el body.
 export class VehiculoController {
   static crear = async (req: TenantRequest, res: Response) => {
     try {
@@ -12,6 +14,7 @@ export class VehiculoController {
     }
   };
 
+  // Método nuevo, para el GET '/' del router (listado global de vehículos).
   static getAll = async (req: TenantRequest, res: Response) => {
     try {
       const vehiculos = await VehiculoService.getAll(req.empresaId!);

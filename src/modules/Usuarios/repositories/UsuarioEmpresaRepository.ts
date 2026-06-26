@@ -5,6 +5,9 @@ import Usuario from '../model/Usuarios';
 import { IAsignarEmpresa, IUpdateAcceso } from '../interface/UsuarioEmpresa.interface';
 
 export const UsuarioEmpresaRepository = {
+  // Método nuevo: es el corazón de la validación multi-tenant (lo usa
+  // middleware/tenant.ts). Devuelve el vínculo si el usuario sí pertenece a esa
+  // empresa, o null si no — no asumimos nada, siempre se consulta la base.
   usuarioPerteneceEmpresa: async (id_usuario: string, id_empresa: string) => {
     return await UsuarioEmpresa.findOne({
       where: { id_usuario, id_empresa, activo: true }

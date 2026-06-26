@@ -7,6 +7,10 @@ export interface ICreateVehiculo {
   color?: string;
   numero_serie?: string;
   kilometraje?: string;
+  // De aquí para abajo son todos los campos nuevos — el formulario del frontend ya
+  // manejaba estos datos (submodelo, seguro, checklist de recepción, etc.) pero el
+  // modelo viejo solo tenía los 8 de arriba, así que se quedaban fuera. Se agregaron
+  // tal cual los nombra el formulario para no tener que mapear nada de más.
   submodelo?: string;
   tipo_combustible?: string;
   transmision?: string;

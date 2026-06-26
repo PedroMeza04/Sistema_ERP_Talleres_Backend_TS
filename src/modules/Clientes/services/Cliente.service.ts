@@ -1,6 +1,8 @@
 import { ICreateCliente, IUpdateCliente } from '../interface/Cliente.interface';
 import { ClienteRepository } from '../repositories/ClienteRepository';
 
+// id_empresa ahora viaja por todos los métodos (getById, actualizar, desactivar) y se
+// lo pasa tal cual al repository, que es quien realmente filtra con él en el where.
 export const ClienteService = {
   crear: async (data: ICreateCliente) => {
     return await ClienteRepository.crear(data);

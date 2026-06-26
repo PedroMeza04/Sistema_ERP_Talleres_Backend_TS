@@ -51,6 +51,10 @@ export default class Vehiculo extends Model {
   @Column(DataType.STRING(20))
   declare kilometraje: string;
 
+  // Columnas nuevas de aquí para abajo — son los campos que el formulario de
+  // Vehículo del frontend ya pedía pero que el modelo no soportaba todavía. Ya están
+  // aplicadas en la base de Neon (vía sync({ alter: true }) en server.ts, no hay
+  // migración formal por ahora). Ver Vehiculo.interface.ts para el detalle de cada uno.
   @Column(DataType.STRING(50))
   declare submodelo: string;
 

@@ -15,6 +15,10 @@ export const AuthRepository = {
     }
     const nuevoUUID = uuidv4();
 
+    // Antes esto era "...data" (spread), pero ICreateUsuario manda la propiedad
+    // como "rol" y la columna del modelo se llama "rol_usuario" — Sequelize ignoraba
+    // el campo que no coincidía y el rol nunca se guardaba (quedaba null). Por eso
+    // ahora se listan los campos a mano, mapeando rol → rol_usuario.
     return await Usuario.create({
       id_usuario: nuevoUUID,
       nombre_usuario: data.nombre_usuario,
@@ -36,6 +40,9 @@ export const AuthRepository = {
     return await Usuario.update({ password_user: nuevaContraHasheada }, { where: { username: usuarioweb } });
   },
 
+  // Nota para quien siga: este getAll() ya no lo llama nadie — AuthService.getAll
+  // ahora usa UsuarioEmpresaRepository.getUsuariosPorEmpresa (que sí filtra por
+  // empresa). Se deja por si sirve para algo, pero probablemente se pueda borrar.
   getAll: async () => {
     return await Usuario.findAll({
       attributes: ['id_usuario', 'username', 'rol_usuario'],

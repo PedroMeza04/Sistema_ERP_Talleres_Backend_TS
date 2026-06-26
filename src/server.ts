@@ -30,6 +30,9 @@ const app = express();
 //DEFINIR DOMINIOS QUE PUEDE RECIBIR PETICIONES
 const withList = [process.env.FRONTEND_URL];
 const corsOption = {
+  // origin viene undefined cuando el request no trae header Origin (Postman, curl, server-to-server).
+  // Esos los dejamos pasar porque no son el riesgo que el CORS busca evitar (un sitio
+  // ajeno haciendo requests desde el navegador de un usuario) — solo filtramos navegadores.
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const existe = !origin || withList.some(dominio => dominio === origin);
     if (existe) {
@@ -39,10 +42,14 @@ const corsOption = {
     }
   }
 };
+// Ojo: antes esta línea era cors() sin nada, o sea que aceptaba cualquier origen y la
+// whitelist de arriba (corsOption) ni se usaba. Ahora sí se aplica de verdad.
 app.use(cors(corsOption));
 app.use(morgan('dev'));
 app.use(express.json());
 
+// generalLimiter ya existía en config/limiter.ts pero nadie lo conectaba a ninguna ruta.
+// Ahora limita cuántos requests por IP puede hacer cualquiera a toda la API.
 app.use('/api', generalLimiter, router);
 
 export default app;

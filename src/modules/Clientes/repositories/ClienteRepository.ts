@@ -37,6 +37,11 @@ export const ClienteRepository = {
     });
   },
 
+  // getById, actualizar y desactivar ahora reciben id_empresa y lo agregan al where.
+  // Antes solo filtraban por id_cliente, así que un usuario de la Empresa A podía
+  // leer/editar/desactivar un cliente de la Empresa B nomás adivinando o conociendo
+  // su id. El id_empresa que llega aquí ya viene verificado desde el controller
+  // (req.empresaId, puesto por el middleware de tenant), no hay que volver a validarlo.
   getById: async (id_cliente: string, id_empresa: string) => {
     return await Cliente.findOne({
       where: { id_cliente, id_empresa },

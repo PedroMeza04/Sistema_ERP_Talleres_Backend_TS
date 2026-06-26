@@ -2,6 +2,10 @@ import type { Response } from 'express';
 import { ClienteService } from '../services/Cliente.service';
 import type { TenantRequest } from '../../../middleware/tenant';
 
+// Todos los métodos de aquí cambiaron req: Request por req: TenantRequest, y usan
+// req.empresaId en vez de leer el header X-Company-Id (o un id_empresa del body/params)
+// directo — ese valor ya viene revisado por el middleware de tenant en el router, así
+// que aquí simplemente se confía en él.
 export class ClienteController {
   static crear = async (req: TenantRequest, res: Response) => {
     try {

@@ -3,6 +3,8 @@ import { AuthService } from '../services/Auth.service';
 import type { TenantRequest } from '../../../middleware/tenant';
 
 export class AuthController {
+  // req.empresaId ya viene verificado por requireCompanyAdmin (ver AuthRouter.ts) —
+  // aquí ya no hay que volver a checar nada, solo usarlo.
   static getAll = async (req: TenantRequest, res: Response) => {
     try {
       const usuarios = await AuthService.getAll(req.empresaId!);
@@ -15,6 +17,9 @@ export class AuthController {
   static createUsuario = async (req: TenantRequest, res: Response) => {
     try {
       const usuario = await AuthService.createEmpleado(req.body, req.empresaId!);
+      // Antes aquí se mandaba el objeto "usuario" completo de Sequelize, lo cual
+      // incluía password_hash en la respuesta. Armamos a mano solo los campos que
+      // sí tiene sentido devolver.
       res.status(201).json({
         mensaje: 'Usuario creado exitosamente',
         usuario: {
