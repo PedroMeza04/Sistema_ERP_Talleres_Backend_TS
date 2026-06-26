@@ -17,8 +17,13 @@ export const AuthRepository = {
 
     return await Usuario.create({
       id_usuario: nuevoUUID,
+      nombre_usuario: data.nombre_usuario,
+      apellido_pat_usuario: data.apellido_pat_usuario,
+      apellido_mat_usuario: data.apellido_mat_usuario,
+      username: data.username,
       password_hash: data.password,
-      ...data
+      rol_usuario: data.rol,
+      activo: data.activo ?? true,
     });
   },
 

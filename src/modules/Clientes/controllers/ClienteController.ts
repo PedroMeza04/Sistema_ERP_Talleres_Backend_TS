@@ -1,52 +1,47 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { ClienteService } from '../services/Cliente.service';
+import type { TenantRequest } from '../../../middleware/tenant';
 
 export class ClienteController {
-  static crear = async (req: Request, res: Response) => {
+  static crear = async (req: TenantRequest, res: Response) => {
     try {
-      const id_empresa = (req.headers['x-company-id'] as string) ?? req.body.id_empresa;
-      if (!id_empresa) {
-        res.status(400).json({ mensaje: 'id_empresa requerido (header X-Company-Id)' });
-        return;
-      }
-      const cliente = await ClienteService.crear({ ...req.body, id_empresa });
+      const cliente = await ClienteService.crear({ ...req.body, id_empresa: req.empresaId! });
       res.status(201).json({ mensaje: 'Cliente creado exitosamente', cliente });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });
     }
   };
 
-  static getAll = async (req: Request, res: Response) => {
+  static getAll = async (req: TenantRequest, res: Response) => {
     try {
-      const id_empresa = req.params.id_empresa ?? (req.headers['x-company-id'] as string);
-      const clientes = await ClienteService.getAll(id_empresa);
+      const clientes = await ClienteService.getAll(req.empresaId!);
       res.status(200).json({ clientes });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });
     }
   };
 
-  static getById = async (req: Request, res: Response) => {
+  static getById = async (req: TenantRequest, res: Response) => {
     try {
-      const cliente = await ClienteService.getById(req.params.id);
+      const cliente = await ClienteService.getById(req.params.id, req.empresaId!);
       res.status(200).json({ cliente });
     } catch (error: any) {
       res.status(404).json({ mensaje: error.message });
     }
   };
 
-  static actualizar = async (req: Request, res: Response) => {
+  static actualizar = async (req: TenantRequest, res: Response) => {
     try {
-      await ClienteService.actualizar(req.params.id, req.body);
+      await ClienteService.actualizar(req.params.id, req.empresaId!, req.body);
       res.status(200).json({ mensaje: 'Cliente actualizado exitosamente' });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });
     }
   };
 
-  static desactivar = async (req: Request, res: Response) => {
+  static desactivar = async (req: TenantRequest, res: Response) => {
     try {
-      await ClienteService.desactivar(req.params.id);
+      await ClienteService.desactivar(req.params.id, req.empresaId!);
       res.status(200).json({ mensaje: 'Cliente desactivado exitosamente' });
     } catch (error: any) {
       res.status(500).json({ mensaje: error.message });

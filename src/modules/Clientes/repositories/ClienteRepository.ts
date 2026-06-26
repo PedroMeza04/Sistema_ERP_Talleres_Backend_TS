@@ -37,18 +37,18 @@ export const ClienteRepository = {
     });
   },
 
-  getById: async (id_cliente: string) => {
+  getById: async (id_cliente: string, id_empresa: string) => {
     return await Cliente.findOne({
-      where: { id_cliente },
+      where: { id_cliente, id_empresa },
       include: [{ model: Vehiculo, where: { activo: true }, required: false }],
     });
   },
 
-  actualizar: async (id_cliente: string, data: IUpdateCliente) => {
-    return await Cliente.update(data, { where: { id_cliente } });
+  actualizar: async (id_cliente: string, id_empresa: string, data: IUpdateCliente) => {
+    return await Cliente.update(data, { where: { id_cliente, id_empresa } });
   },
 
-  desactivar: async (id_cliente: string) => {
-    return await Cliente.update({ activo: false }, { where: { id_cliente } });
+  desactivar: async (id_cliente: string, id_empresa: string) => {
+    return await Cliente.update({ activo: false }, { where: { id_cliente, id_empresa } });
   },
 };

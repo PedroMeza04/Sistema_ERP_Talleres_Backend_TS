@@ -5,6 +5,12 @@ import Usuario from '../model/Usuarios';
 import { IAsignarEmpresa, IUpdateAcceso } from '../interface/UsuarioEmpresa.interface';
 
 export const UsuarioEmpresaRepository = {
+  usuarioPerteneceEmpresa: async (id_usuario: string, id_empresa: string) => {
+    return await UsuarioEmpresa.findOne({
+      where: { id_usuario, id_empresa, activo: true }
+    });
+  },
+
   asignar: async (data: IAsignarEmpresa) => {
     const existente = await UsuarioEmpresa.findOne({
       where: { id_usuario: data.id_usuario, id_empresa: data.id_empresa }

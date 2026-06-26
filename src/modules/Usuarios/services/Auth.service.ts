@@ -5,9 +5,11 @@ import { checkPassword, hashPassword } from '../../../utils/hashPassword';
 import { UsuarioEmpresaRepository } from '../repositories/UsuarioEmpresaRepository';
 
 export const AuthService = {
-  createEmpleado: async (data: ICreateUsuario) => {
+  createEmpleado: async (data: ICreateUsuario, id_empresa: string) => {
     data.password = await hashPassword(data.password);
-    return await AuthRepository.crearUsuario(data);
+    const usuario = await AuthRepository.crearUsuario(data);
+    await UsuarioEmpresaRepository.asignar({ id_usuario: usuario.id_usuario, id_empresa, rol: data.rol });
+    return usuario;
   },
 
   iniciarSesion: async (data: IIniciarSesion) => {
@@ -36,7 +38,7 @@ export const AuthService = {
     };
   },
 
-  getAll: async () => {
-    return await AuthRepository.getAll();
+  getAll: async (id_empresa: string) => {
+    return await UsuarioEmpresaRepository.getUsuariosPorEmpresa(id_empresa);
   },
 };

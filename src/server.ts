@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { dbLocal /*dbVieja/* dbRemota */ } from './config/db'; // Ambas conexiones
 import router from './routes';
+import { generalLimiter } from './config/limiter';
 import { error } from 'console';
 require('dotenv').config({ path: '.env' });
 async function connectDatabases() {
@@ -29,8 +30,8 @@ const app = express();
 //DEFINIR DOMINIOS QUE PUEDE RECIBIR PETICIONES
 const withList = [process.env.FRONTEND_URL];
 const corsOption = {
-  origin: (origin, callback) => {
-    const existe = withList.some(dominio => dominio === origin);
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    const existe = !origin || withList.some(dominio => dominio === origin);
     if (existe) {
       callback(null, true);
     } else {
@@ -38,10 +39,10 @@ const corsOption = {
     }
   }
 };
-app.use(cors());
+app.use(cors(corsOption));
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use('/api', router);
+app.use('/api', generalLimiter, router);
 
 export default app;

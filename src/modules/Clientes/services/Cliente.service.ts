@@ -10,19 +10,19 @@ export const ClienteService = {
     return await ClienteRepository.getAll(id_empresa);
   },
 
-  getById: async (id_cliente: string) => {
-    const cliente = await ClienteRepository.getById(id_cliente);
+  getById: async (id_cliente: string, id_empresa: string) => {
+    const cliente = await ClienteRepository.getById(id_cliente, id_empresa);
     if (!cliente) throw new Error('Cliente no encontrado.');
     return cliente;
   },
 
-  actualizar: async (id_cliente: string, data: IUpdateCliente) => {
-    await ClienteService.getById(id_cliente);
-    return await ClienteRepository.actualizar(id_cliente, data);
+  actualizar: async (id_cliente: string, id_empresa: string, data: IUpdateCliente) => {
+    await ClienteService.getById(id_cliente, id_empresa);
+    return await ClienteRepository.actualizar(id_cliente, id_empresa, data);
   },
 
-  desactivar: async (id_cliente: string) => {
-    await ClienteService.getById(id_cliente);
-    return await ClienteRepository.desactivar(id_cliente);
+  desactivar: async (id_cliente: string, id_empresa: string) => {
+    await ClienteService.getById(id_cliente, id_empresa);
+    return await ClienteRepository.desactivar(id_cliente, id_empresa);
   }
 };
