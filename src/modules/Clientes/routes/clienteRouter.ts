@@ -9,9 +9,7 @@ const clienteRouter = Router();
 clienteRouter.use(requireCompanyMember);
 
 clienteRouter.post('/', ClienteController.crear);
-// Ojo: aunque la ruta sigue recibiendo :id_empresa en la URL, el controller ya no lo
-// usa — ahora usa req.empresaId (el verificado por el middleware de arriba). El
-// parámetro de la URL quedó ahí por compatibilidad, pero no hace nada.
+clienteRouter.get('/buscar', ClienteController.buscar);
 clienteRouter.get('/empresa/:id_empresa', ClienteController.getAll);
 clienteRouter.get('/:id', ClienteController.getById);
 clienteRouter.put('/:id', ClienteController.actualizar);

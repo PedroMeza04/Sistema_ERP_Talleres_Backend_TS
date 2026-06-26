@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 import Cliente from '../model/Cliente';
 import Vehiculo from '../model/Vehiculo';
 import { ICreateCliente, IUpdateCliente } from '../interface/Cliente.interface';
@@ -55,5 +56,21 @@ export const ClienteRepository = {
 
   desactivar: async (id_cliente: string, id_empresa: string) => {
     return await Cliente.update({ activo: false }, { where: { id_cliente, id_empresa } });
+  },
+
+  buscar: async (id_empresa: string, q: string) => {
+    return Cliente.findAll({
+      where: {
+        id_empresa,
+        activo: true,
+        [Op.or]: [
+          { nombre: { [Op.iLike]: `%${q}%` } },
+          { telefono: { [Op.iLike]: `%${q}%` } },
+          { email: { [Op.iLike]: `%${q}%` } },
+        ],
+      },
+      include: [{ model: Vehiculo, attributes: ['id_vehiculo', 'marca', 'modelo', 'anio', 'placa'], where: { activo: true }, required: false }],
+      limit: 10,
+    });
   },
 };

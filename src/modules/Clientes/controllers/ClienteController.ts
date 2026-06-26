@@ -51,4 +51,14 @@ export class ClienteController {
       res.status(500).json({ mensaje: error.message });
     }
   };
+
+  static buscar = async (req: TenantRequest, res: Response) => {
+    try {
+      const q = String(req.query.q ?? '');
+      const clientes = await ClienteService.buscar(req.empresaId!, q);
+      res.status(200).json({ clientes });
+    } catch (error: any) {
+      res.status(500).json({ mensaje: error.message });
+    }
+  };
 }

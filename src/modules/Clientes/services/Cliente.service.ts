@@ -26,5 +26,7 @@ export const ClienteService = {
   desactivar: async (id_cliente: string, id_empresa: string) => {
     await ClienteService.getById(id_cliente, id_empresa);
     return await ClienteRepository.desactivar(id_cliente, id_empresa);
-  }
+  },
+
+  buscar: (id_empresa: string, q: string) => ClienteRepository.buscar(id_empresa, q),
 };
